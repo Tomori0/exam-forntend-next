@@ -9,7 +9,8 @@ const theme = createTheme({
     primary: {
       // light: 这将从 palette.primary.main 中进行计算，
       light: '#a6d4fa',
-      main: '#90caf9',
+      // main: '#90caf9',
+      main: '#c9aa62',
       dark: '#648dae'
       // dark: 这将从 palette.primary.main 中进行计算，
       // contrastText: 这将计算与 palette.primary.main 的对比度

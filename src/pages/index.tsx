@@ -27,7 +27,7 @@ const schema = yup.object().shape({
 });
 
 
-export default function Home() {
+export default function SignIn() {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
@@ -54,7 +54,7 @@ export default function Home() {
         <Container>
           <Grid container direction="column" alignItems="center" justifyContent="center" className='relative h-screen'>
             <Grid item xs={12}>
-              <Card sx={{maxWidth: '380px'}} className='absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]'>
+              <Card sx={{width: '380px'}} className='absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]'>
                 <CardContent sx={{margin: '12px'}}>
                   <Avatar src='/images/logo.svg' sx={{width: '86px', height: '86px', margin: '24px auto'}}></Avatar>
                   <Typography align='center' variant='h5' component='p'>
@@ -69,7 +69,7 @@ export default function Home() {
                         variant="standard"
                         error={Boolean(errors.email)}
                         helperText={errors.email?.message}
-                        {/*{...register<keyof Form>('email')}*/}
+                        {...register<keyof Form>('email')}
                       />
                     </FormControl>
                     <FormControl required sx={{ marginBottom: '24px' }} fullWidth variant="standard">

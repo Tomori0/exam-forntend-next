@@ -14,10 +14,10 @@ export default function Footer() {
       <Container maxWidth="lg">
         <Grid container direction="column" alignItems="center">
           <Grid item xs={12}>
-            <Typography color="black" variant="span" sx={{marginRight: '24px'}}>
+            <Typography color="black" component='span' sx={{marginRight: '24px'}}>
               Copyright © 上海玖义科技有限公司
             </Typography>
-            <Typography color="textSecondary" variant="span" component="a" href='https://beian.miit.gov.cn/' target='_blank'>
+            <Typography color="textSecondary" component="a" href='https://beian.miit.gov.cn/' target='_blank'>
               沪ICP备2021038027号-1
             </Typography>
           </Grid>
