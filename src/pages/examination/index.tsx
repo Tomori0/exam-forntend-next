@@ -1,59 +1,118 @@
 import Header from "../../../components/header";
 import Head from "next/head";
+import examList from "../../../interface/examList";
+import {Avatar, Box, Card, CardContent, Container, Unstable_Grid2 as Grid, Typography} from "@mui/material";
+import {useEffect} from "react";
 
 export default function Dashboard() {
+
+  const testData: examList[] = [{
+    categoryName: "Linux Professional Institute",
+    examDetailList: [{
+      examId: 1,
+      examCode: "lpic101-500",
+      examName: "LPI 101-500 Exam",
+      categoryId: "291d411634ecbbc2c8e9547febe637d5"
+    }, {
+      examId: 2,
+      examCode: "lpic102-500",
+      examName: "LPI 102-500 Exam",
+      categoryId:"291d411634ecbbc2c8e9547febe637d5"
+    }]}, {
+    categoryName: "Salesforce",
+    examDetailList: [{
+      examId: 3,
+      examCode: "sfCertifiedAdvancedAdministrator",
+      examName: "Salesforce Certified Advanced Administrator Exam",
+      categoryId: "8ec8e5b31acf36ea3119df7525773376"
+    }, {
+      examId: 4,
+      examCode: "ADM-201-JPN",
+      examName: "Salesforce Certified Administrator Japanese",
+      categoryId: "8ec8e5b31acf36ea3119df7525773376"
+    }]
+  }]
+
+  useEffect(() => {
+    console.log(testData)
+  }, [])
+
   return (
     <div className='content-center h-screen'>
       <Head><title>考试 - 玖义考试</title></Head>
       <Header  value={2}/>
-      {/*<Box*/}
-      {/*  sx={{*/}
-      {/*    width: '100%',*/}
-      {/*    paddingTop: '1rem',*/}
-      {/*    paddingBottom: '1rem',*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <Container>*/}
-      {/*    <Grid container direction='column' alignItems='center' justifyContent='center' className='relative h-screen'>*/}
-      {/*      <Grid item xs={12}>*/}
-      {/*        <Card sx={{width: '380px'}} className={`absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] ${isSuccess && 'hidden'}`}>*/}
-      {/*          <CardContent sx={{margin: '12px'}}>*/}
-      {/*            <Avatar src='/images/logo.svg' sx={{width: '86px', height: '86px', margin: '24px auto'}}></Avatar>*/}
-      {/*            <Typography align='center' variant='h5' component='p'>*/}
-      {/*              忘记密码*/}
-      {/*            </Typography>*/}
-      {/*            <form>*/}
-      {/*              <FormControl required sx={{ margin: '12px 0 24px 0' }} fullWidth variant='standard'>*/}
-      {/*                <TextField*/}
-      {/*                  label='邮箱'*/}
-      {/*                  required*/}
-      {/*                  fullWidth*/}
-      {/*                  variant='standard'*/}
-      {/*                  error={Boolean(errors.email)}*/}
-      {/*                  helperText={errors.email?.message}*/}
-      {/*                  {...register<keyof Form>('email')}*/}
-      {/*                />*/}
-      {/*              </FormControl>*/}
-      {/*              <Button className='bg-gradient-to-r w-full text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd]'*/}
-      {/*                      onClick={handleSubmit(onSubmit)}*/}
-      {/*              >*/}
-      {/*                找回密码*/}
-      {/*              </Button>*/}
-      {/*            </form>*/}
-      {/*            <div className='flex justify-end mt-[24px] text-[#949494]'>*/}
-      {/*              <Link className='hover:text-[#c9aa62]' href={'/'} >*/}
-      {/*                已有账号*/}
-      {/*              </Link>*/}
-      {/*            </div>*/}
-      {/*          </CardContent>*/}
-      {/*        </Card>*/}
-      {/*        <Alert className={`absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] ${isSuccess || 'hidden'}`} severity="success">*/}
-      {/*          {`请前往邮箱 ${watch('email')} 验证`}*/}
-      {/*        </Alert>*/}
-      {/*      </Grid>*/}
-      {/*    </Grid>*/}
-      {/*  </Container>*/}
-      {/*</Box>*/}
+      <Box
+        sx={{
+          paddingTop: '1rem',
+          paddingBottom: '1rem',
+          margin: '0 auto'
+        }}
+      >
+        <Container>
+          <Grid container spacing={2} columns={24}>
+            <Grid xs={24} md={12} lg={8}>
+              <Card className={'w-full'}>
+                <CardContent sx={{margin: '12px'}}>
+                  <Avatar src='/images/logo.svg' sx={{width: '86px', height: '86px', margin: '24px auto'}}></Avatar>
+                  <Typography align='center' variant='h5' component='p'>
+                    忘记密码
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid xs={24} md={12} lg={8}>
+              <Card className={'w-full'}>
+                <CardContent sx={{margin: '12px'}}>
+                  <Avatar src='/images/logo.svg' sx={{width: '86px', height: '86px', margin: '24px auto'}}></Avatar>
+                  <Typography align='center' variant='h5' component='p'>
+                    忘记密码
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid xs={24} md={12} lg={8}>
+              <Card className={'w-full'}>
+                <CardContent sx={{margin: '12px'}}>
+                  <Avatar src='/images/logo.svg' sx={{width: '86px', height: '86px', margin: '24px auto'}}></Avatar>
+                  <Typography align='center' variant='h5' component='p'>
+                    忘记密码
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid xs={24} md={12} lg={8}>
+              <Card className={'w-full'}>
+                <CardContent sx={{margin: '12px'}}>
+                  <Avatar src='/images/logo.svg' sx={{width: '86px', height: '86px', margin: '24px auto'}}></Avatar>
+                  <Typography align='center' variant='h5' component='p'>
+                    忘记密码
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid xs={24} md={12} lg={8}>
+              <Card className={'w-full'}>
+                <CardContent sx={{margin: '12px'}}>
+                  <Avatar src='/images/logo.svg' sx={{width: '86px', height: '86px', margin: '24px auto'}}></Avatar>
+                  <Typography align='center' variant='h5' component='p'>
+                    忘记密码
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid xs={24} md={12} lg={8}>
+              <Card className={'w-full'}>
+                <CardContent sx={{margin: '12px'}}>
+                  <Avatar src='/images/logo.svg' sx={{width: '86px', height: '86px', margin: '24px auto'}}></Avatar>
+                  <Typography align='center' variant='h5' component='p'>
+                    忘记密码
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
     </div>
   )
 }
