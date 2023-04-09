@@ -4,8 +4,8 @@ import Head from "next/head";
 export default function Dashboard() {
   return (
     <div className='content-center h-screen'>
-      <Head><title>首页 - 玖义考试</title></Head>
-      <Header  value={0}/>
+      <Head><title>考试 - 玖义考试</title></Head>
+      <Header  value={2}/>
       {/*<Box*/}
       {/*  sx={{*/}
       {/*    width: '100%',*/}

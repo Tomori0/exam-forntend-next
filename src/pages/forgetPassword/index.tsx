@@ -15,6 +15,7 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useState} from 'react';
 import 'dayjs/locale/zh-cn';
+import Head from "next/head";
 
 type Form = {
   email: string,
@@ -41,6 +42,7 @@ export default function Home() {
 
   return (
     <div className='content-center h-screen'>
+      <Head><title>忘记密码 - 玖义考试</title></Head>
       <Box
         sx={{
           width: '100%',

@@ -1,9 +1,9 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import {Html, Head, Main, NextScript} from 'next/document'
 
 export default function Document() {
   return (
     <Html lang="en">
-      <Head><title>'考试练习门户 - 上海玖义科技有限公司'</title></Head>
+      <Head></Head>
       <body>
         <Main />
         <NextScript />

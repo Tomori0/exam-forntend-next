@@ -18,6 +18,7 @@ import {useState} from 'react';
 import 'dayjs/locale/zh-cn';
 import {LocalizationProvider, MobileDatePicker} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import Head from "next/head";
 
 type Form = {
   email: string,
@@ -58,6 +59,7 @@ export default function SignUp() {
 
   return (
     <div className='content-center h-screen'>
+      <Head><title>注册 - 玖义考试</title></Head>
       <Box
         sx={{
           width: '100%',

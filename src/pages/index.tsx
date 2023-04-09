@@ -15,6 +15,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {useState} from "react";
 import Link from "next/link";
 import {useForm} from "react-hook-form";
+import Head from "next/head";
 
 type Form = {
   email: string,
@@ -44,6 +45,7 @@ export default function SignIn() {
 
   return (
     <div className='content-center h-screen'>
+      <Head><title>登录 - 玖义考试</title></Head>
       <Box
         sx={{
           width: "100%",
