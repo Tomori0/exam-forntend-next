@@ -31,7 +31,7 @@ export default function Header({value} : Props) {
   };
 
   const changePage = (path: string) => {
-    router.push(path).then(() => true)
+    router.push(path).then(r => console.log(r))
   }
 
   return (
