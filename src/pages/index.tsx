@@ -16,6 +16,10 @@ import {useState} from "react";
 import Link from "next/link";
 import {useForm} from "react-hook-form";
 import Head from "next/head";
+import serviceAxios from "../../util/serviceAxios";
+import {AxiosResponse} from "axios";
+import {LoginResponse} from "../../interface/LoginResponse";
+import {useRouter} from "next/router";
 
 type Form = {
   email: string,
@@ -29,6 +33,7 @@ const schema = yup.object().shape({
 
 
 export default function SignIn() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
@@ -39,8 +44,22 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<Form>({ resolver: yupResolver(schema), mode: 'onChange' });
 
-  const onSubmit = (data: Form) => {
-    console.log(data);
+  const onSubmit = async (data: Form) => {
+    // const response: AxiosResponse<LoginResponse> = await
+    serviceAxios({
+      url: "/api/auth/login",
+      method: "post",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      data: {username: data.email, password: data.password},
+    }).then((response: AxiosResponse<LoginResponse>) => {
+      sessionStorage.setItem('token', response.data.token)
+      sessionStorage.setItem('tokenHead', response.data.tokenHead)
+      router.push('/dashboard')
+    }).catch(error => {
+      console.log(error)
+    })
   };
 
   return (

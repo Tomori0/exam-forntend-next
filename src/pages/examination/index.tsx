@@ -1,12 +1,12 @@
 import Header from "../../../components/header";
 import Head from "next/head";
-import examList from "../../../interface/examList";
+import ExamList from "../../../interface/ExamList";
 import {Avatar, Box, Card, CardContent, Container, Unstable_Grid2 as Grid, Typography} from "@mui/material";
 import {useEffect} from "react";
 
 export default function Dashboard() {
 
-  const testData: examList[] = [{
+  const testData: ExamList[] = [{
     categoryName: "Linux Professional Institute",
     examDetailList: [{
       examId: 1,

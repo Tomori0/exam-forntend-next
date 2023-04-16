@@ -1,7 +1,20 @@
 import Header from "../../../components/header";
 import Head from "next/head";
+import {useEffect} from "react";
+import serviceAxios from "../../../util/serviceAxios";
 
 export default function Dashboard() {
+  useEffect(() => {
+    serviceAxios({
+      url: "/api/auth/info",
+      method: "get"
+    }).then((response) => {
+      console.log(response)
+    }).catch(error => {
+      console.log(error)
+    })
+  }, [])
+
   return (
     <div className='content-center h-screen'>
       <Head><title>首页 - 玖义考试</title></Head>
