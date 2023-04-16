@@ -6,12 +6,13 @@ import {
   Typography
 } from "@mui/material";
 import {AccountCircle} from "@mui/icons-material";
-import {MouseEvent, useState} from "react";
+import {MouseEvent, useEffect, useState} from "react";
 import Link from "next/link";
 import HomeIcon from '@mui/icons-material/Home';
 import QuizIcon from '@mui/icons-material/Quiz';
 import ExplicitIcon from '@mui/icons-material/Explicit';
 import {useRouter} from "next/router";
+import {UserInfo} from "../interface/UserInfo";
 
 type Props = {
   value: number
@@ -21,6 +22,20 @@ export default function Header({value} : Props) {
   const [auth] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
+  const [user, setUser] = useState<UserInfo>();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (sessionStorage.getItem('user') !== null) {
+        const json = JSON.parse(sessionStorage.getItem('user') ?? '');
+        setUser(json)
+      }
+      console.log('ste')
+    }, 500)
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
 
   const handleMenu = (event:  MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -92,7 +107,7 @@ export default function Header({value} : Props) {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <Avatar><AccountCircle /></Avatar>
+                <Avatar src={user?.avatar}>{user?.avatar ?? <AccountCircle />}</Avatar>
               </IconButton>
               <Menu
                 id="menu-appbar"
