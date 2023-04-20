@@ -1,4 +1,3 @@
-import Header from "../../../components/header";
 import Head from "next/head";
 import ExamList from "../../../interface/ExamList";
 import {Avatar, Box, Card, CardContent, Container, Unstable_Grid2 as Grid, Typography} from "@mui/material";
@@ -40,7 +39,6 @@ export default function Dashboard() {
   return (
     <div className='content-center h-screen'>
       <Head><title>考试 - 玖义考试</title></Head>
-      <Header  value={2}/>
       <Box
         sx={{
           paddingTop: '1rem',

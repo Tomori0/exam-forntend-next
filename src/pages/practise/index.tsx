@@ -1,11 +1,9 @@
-import Header from "../../../components/header";
 import Head from "next/head";
 
 export default function Dashboard() {
   return (
     <div className='content-center h-screen'>
       <Head><title>练习 - 玖义考试</title></Head>
-      <Header  value={1}/>
       {/*<Box*/}
       {/*  sx={{*/}
       {/*    width: '100%',*/}

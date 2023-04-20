@@ -1,5 +1,4 @@
 import {
-  Alert,
   Avatar,
   Box,
   Button,
@@ -12,17 +11,22 @@ import Link from 'next/link';
 import * as yup from 'yup';
 import {Controller, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
+import EmailIcon from '@mui/icons-material/Email';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
-import {useState} from 'react';
-import 'dayjs/locale/zh-cn';
+import {useEffect, useRef, useState} from 'react';
+import { format } from 'date-fns';
+import { zonedTimeToUtc } from 'date-fns-tz'
+import zhCN from 'date-fns/locale/zh-CN'
 import {LocalizationProvider, MobileDatePicker} from '@mui/x-date-pickers';
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import Head from "next/head";
+import serviceAxios from "../../../util/serviceAxios";
+import {AxiosResponse} from "axios";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 
 type Form = {
   email: string,
-  username: string,
+  nickname: string,
   password: string,
   confirmPassword: string,
   birthday: Date,
@@ -30,7 +34,7 @@ type Form = {
 
 const schema = yup.object().shape({
   email: yup.string().required('请输入邮箱。').email('请输入正确的邮箱格式。'),
-  username: yup.string().required('请输入用户名。').max(16, '用户名不能超过16个字符。').min(3, '用户名至少3个字符。'),
+  nickname: yup.string().required('请输入用户名。').max(16, '用户名不能超过16个字符。').min(3, '用户名至少3个字符。'),
   password: yup.string().required('请输入密码。').matches(/^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]{8,16}$/, '密码满足大小写字母，数字和特殊字符中任意三种(8-16位)'),
   confirmPassword: yup.string().required('请输入确认密码。').oneOf([yup.ref('password')], '两次密码不一致。'),
   birthday: yup.date().required('请选择出生日期。').max(new Date(), '日期不能大于当前日期。'),
@@ -40,9 +44,31 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
   const [isSuccess, setSuccess] = useState<boolean>(false);
+  const resendTimeRef = useRef<Date|undefined>(undefined);
+  const countDownTimeRef = useRef<Date|undefined>(undefined);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
   const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (countDownTimeRef.current !== undefined && resendTimeRef.current !== undefined) {
+        const newTime = new Date(countDownTimeRef.current.getTime() + 1000); // 添加3分钟的毫秒数
+        if (newTime.getTime() > resendTimeRef.current.getTime()) {
+          resendTimeRef.current = undefined
+          countDownTimeRef.current = undefined
+        } else {
+          countDownTimeRef.current = newTime
+          const countdownElement = document.getElementById('countdown');
+          if (countdownElement !== null) {
+            countdownElement.textContent = `已重新发送验证码，距离下一次重新发送还剩 ${format(new Date(resendTimeRef.current.getTime() - countDownTimeRef.current.getTime()), 'mm:ss')}`;
+          }
+        }
+      }
+    }, 1000); // 每秒钟更新一次时间
+
+    return () => clearInterval(interval);
+  }, [countDownTimeRef.current]);
 
   const {
     register,
@@ -54,8 +80,25 @@ export default function SignUp() {
 
   const onSubmit = (data: Form) => {
     setSuccess(true)
-    console.log(data);
+    serviceAxios({
+      url: "/api/auth/register",
+      method: "post",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8"
+      },
+      data: data,
+    }).then((response: AxiosResponse) => {
+      console.log(response)
+    }).catch(error => {
+      console.log(error)
+    })
   };
+
+  const onResend = () => {
+    const date = new Date(new Date().getTime() + 3 * 60 * 1000)
+    countDownTimeRef.current = new Date()
+    resendTimeRef.current = date
+  }
 
   return (
     <div className='content-center h-screen'>
@@ -94,16 +137,16 @@ export default function SignUp() {
                         required
                         fullWidth
                         variant='standard'
-                        error={Boolean(errors.username)}
-                        helperText={errors.username?.message}
+                        error={Boolean(errors.nickname)}
+                        helperText={errors.nickname?.message}
                         inputProps={{
                           maxLength: 16
                         }}
-                        {...register<keyof Form>('username')}
+                        {...register<keyof Form>('nickname')}
                       />
                     </FormControl>
                     <FormControl required sx={{ margin: '12px 0' }} fullWidth variant='standard'>
-                      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'zh-cn'}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={zhCN}>
                         <Controller
                           name='birthday'
                           control={control}
@@ -112,8 +155,12 @@ export default function SignUp() {
                           <MobileDatePicker
                             label='生日'
                             value={field.value}
-                            onChange={(e) => field.onChange(e)}
-                            inputFormat='YYYY/MM/DD'
+                            onChange={(e) => {
+                              if (e instanceof Date)
+                                e = zonedTimeToUtc(e, Intl.DateTimeFormat().resolvedOptions().timeZone)
+                              field.onChange(e)
+                            }}
+                            inputFormat='yyyy/MM/dd'
                             renderInput={(params) => (
                               <TextField {...params} required error={!!errors.birthday} helperText={errors?.birthday?.message} variant='standard' />
                             )}
@@ -181,9 +228,53 @@ export default function SignUp() {
                   </div>
                 </CardContent>
               </Card>
-              <Alert className={`absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] ${isSuccess || 'hidden'}`} severity="success">
-                {`请前往邮箱 ${watch('email')} 验证`}
-              </Alert>
+              <div className={`absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] ${isSuccess || 'hidden'}`}>
+                <Avatar sx={{ width: 86, height: 86, border: '3px solid #fff', backgroundColor: 'transparent', margin: '0 auto' }}><EmailIcon sx={{width: 56, height: 56}}/></Avatar>
+                <Typography variant='h4' component='h4' mt={3} sx={{textAlign: 'center'}}>
+                  请验证您的邮箱
+                </Typography>
+                <Box mt={3} sx={{textAlign: 'center'}}>
+                  <Typography>
+                    请输入已发送至 ${watch('email')} 的验证码。
+                  </Typography>
+                  <Typography>
+                    该验证码的有效期为30分钟。
+                  </Typography>
+                </Box>
+                <Box component='div' mt={3} width={190} sx={{marginLeft: 'auto', marginRight: 'auto'}}>
+                  {/*<CssTextField*/}
+                  <TextField
+                    fullWidth
+                    size='small'
+                    variant='outlined'
+                    inputProps={{
+                      maxLength: 6,
+                      style: {
+                        textAlign: 'center',
+                        letterSpacing: '1em',
+                        paddingLeft: '1.5em',
+                        width: '100%',
+                      },
+                    }}
+                    sx={{margin: '0 auto'}}
+                  />
+                </Box>
+                <Box component='div' mt={3}>
+                  <Button className='block bg-gradient-to-r w-[260px] text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd] ml-auto mr-auto'
+                          onClick={handleSubmit(onSubmit)}
+                  >
+                    验证邮箱
+                  </Button>
+                  <div className={`text-center mt-3 ${resendTimeRef.current !== undefined && 'hidden' }`}>
+                    <p className='text-xs underline hover:cursor-pointer hover:no-underline' onClick={onResend}>重新发送验证码</p>
+                  </div>
+                  <div className={`text-center mt-3 ${resendTimeRef.current === undefined && 'hidden' }`}>
+                    <p className='text-xs' id='countdown'>
+                      {`已重新发送验证码，距离下一次重新发送还剩 ${resendTimeRef.current !== undefined && countDownTimeRef.current !== undefined ? format(new Date(resendTimeRef.current.getTime() - countDownTimeRef.current.getTime()), 'MM:dd') : null}`}
+                    </p>
+                  </div>
+                </Box>
+              </div>
             </Grid>
           </Grid>
         </Container>

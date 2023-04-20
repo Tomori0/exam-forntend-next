@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import {createTheme, ThemeProvider} from "@mui/material";
 import Head from "next/head";
 import Footer from "../../components/footer";
+import Header from "../../components/header";
 
 const theme = createTheme({
   palette: {
@@ -32,6 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="keywords" content="上海玖义科技有限公司,玖义科技,玖义考试,玖义练习,考试,练习,玖义" />
         <link rel="icon" href="/images/favicon.ico" />
       </Head>
+      <Header></Header>
       <div className='h-screen bg-gradient-to-r to-[#c9aa62bb] from-[#c7c7c7bb]'>
         <Component {...pageProps} />
       </div>
