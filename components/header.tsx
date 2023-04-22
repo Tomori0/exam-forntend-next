@@ -82,6 +82,7 @@ export default function Header() {
                 <BottomNavigationAction label="首页" icon={<HomeIcon />} onClick={() => changePage(0, '/dashboard')} />
                 <BottomNavigationAction label="练习" icon={<QuizIcon />} onClick={() => changePage(1, '/practise')} />
                 <BottomNavigationAction label="考试" icon={<ExplicitIcon />} onClick={() => changePage(2, '/examination')} />
+                <BottomNavigationAction label="AI解惑" icon={<PsychologyAltIcon />} onClick={() => changePage(3, '/aiChat')} />
               </BottomNavigation>
             </div>
             <div>
@@ -111,7 +112,6 @@ export default function Header() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}><PersonIcon/><span className='ml-1'>我的账户</span></MenuItem>
-                <MenuItem onClick={handleClose}><PsychologyAltIcon/><span className='ml-1'>AI解惑</span></MenuItem>
                 <Divider/>
                 <MenuItem onClick={handleLogout}><ExitToAppIcon/><span className='ml-1'>退出登录</span></MenuItem>
               </Menu>

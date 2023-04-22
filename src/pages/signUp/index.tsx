@@ -1,10 +1,11 @@
 import {
+  Alert,
   Avatar,
   Box,
   Button,
   Card, CardContent,
-  Container, FormControl, FormHelperText,
-  Grid, IconButton, Input, InputAdornment, InputLabel, TextField,
+  Container, Divider, FormControl, FormHelperText,
+  Grid, IconButton, Input, InputAdornment, InputLabel, Snackbar, TextField,
   Typography
 } from '@mui/material';
 import Link from 'next/link';
@@ -14,15 +15,17 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import EmailIcon from '@mui/icons-material/Email';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
-import {useEffect, useRef, useState} from 'react';
+import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import { format } from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz'
 import zhCN from 'date-fns/locale/zh-CN'
 import {LocalizationProvider, MobileDatePicker} from '@mui/x-date-pickers';
-import Head from "next/head";
-import serviceAxios from "../../../util/serviceAxios";
+import Head from 'next/head';
+import serviceAxios from '../../../util/serviceAxios';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {AxiosResponse} from "axios";
-import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import {LoginResponse} from "../../../interface/LoginResponse";
+import {useRouter} from "next/router";
 
 type Form = {
   email: string,
@@ -41,14 +44,23 @@ const schema = yup.object().shape({
 });
 
 export default function SignUp() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
-  const [isSuccess, setSuccess] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [successToken, setSuccessToken] = useState<string>('');
+  const [isError, setIsError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [verifyCode, setVerifyCode] = useState<string>('');
   const resendTimeRef = useRef<Date|undefined>(undefined);
   const countDownTimeRef = useRef<Date|undefined>(undefined);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
   const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show)
+
+  const handleVerifyChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setVerifyCode(e.target.value.toUpperCase())
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -79,16 +91,44 @@ export default function SignUp() {
   } = useForm<Form>({resolver: yupResolver(schema), mode: 'onChange'})
 
   const onSubmit = (data: Form) => {
-    setSuccess(true)
     serviceAxios({
-      url: "/api/auth/register",
-      method: "post",
+      url: '/api/auth/register',
+      method: 'post',
       headers: {
-        "Content-Type": "application/json;charset=utf-8"
+        'Content-Type': 'application/json;charset=utf-8'
       },
       data: data,
-    }).then((response: AxiosResponse) => {
-      console.log(response)
+    }).then((response) => {
+      if (response.status !== 200) {
+        setIsError(true)
+        setErrorMessage(response.statusText)
+      } else {
+        setIsSuccess(true)
+        setSuccessToken(response.data)
+      }
+    }).catch(error => {
+      console.log(error)
+    })
+  };
+
+  const onVerifyEmail = () => {
+    serviceAxios({
+      url: '/api/auth/verify',
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      data: {
+        email: watch('email'),
+        token: successToken,
+        verifyCode: verifyCode
+      }
+    }).then((response: AxiosResponse<LoginResponse>) => {
+      if (response.status === 200) {
+        sessionStorage.setItem('token', response.data.token)
+        sessionStorage.setItem('tokenHead', response.data.tokenHead)
+        router.push('/dashboard')
+      }
     }).catch(error => {
       console.log(error)
     })
@@ -170,9 +210,9 @@ export default function SignUp() {
                       </LocalizationProvider>
                     </FormControl>
                     <FormControl required sx={{ margin: '12px 0' }} fullWidth variant='standard'>
-                      <InputLabel htmlFor='standard-adornment-password'>密码</InputLabel>
+                      <InputLabel htmlFor='password-input'>密码</InputLabel>
                       <Input
-                        id='standard-adornment-password'
+                        id='password-input'
                         fullWidth
                         {...register<keyof Form>('password')}
                         error={Boolean(errors.password)}
@@ -193,9 +233,9 @@ export default function SignUp() {
                       <FormHelperText sx={{color: 'error.main'}} id='password-error-text'>{errors.password?.message}</FormHelperText>
                     </FormControl>
                     <FormControl required sx={{ margin: '12px 0 24px 0' }} fullWidth variant='standard'>
-                      <InputLabel htmlFor='standard-adornment-password'>确认密码</InputLabel>
+                      <InputLabel htmlFor='confirm-password-input'>确认密码</InputLabel>
                       <Input
-                        id='standard-adornment-password'
+                        id='confirm-password-input'
                         fullWidth
                         {...register<keyof Form>('confirmPassword')}
                         error={Boolean(errors.confirmPassword)}
@@ -228,6 +268,11 @@ export default function SignUp() {
                   </div>
                 </CardContent>
               </Card>
+              <Snackbar open={isError} autoHideDuration={6000} onClose={() => setIsError(false)} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                <Alert onClose={() => setIsError(false)} severity='error' sx={{ width: '100%' }}>
+                  {errorMessage}
+                </Alert>
+              </Snackbar>
               <div className={`absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] ${isSuccess || 'hidden'}`}>
                 <Avatar sx={{ width: 86, height: 86, border: '3px solid #fff', backgroundColor: 'transparent', margin: '0 auto' }}><EmailIcon sx={{width: 56, height: 56}}/></Avatar>
                 <Typography variant='h4' component='h4' mt={3} sx={{textAlign: 'center'}}>
@@ -235,33 +280,34 @@ export default function SignUp() {
                 </Typography>
                 <Box mt={3} sx={{textAlign: 'center'}}>
                   <Typography>
-                    请输入已发送至 ${watch('email')} 的验证码。
+                    请输入已发送至 {watch('email')} 的验证码。
                   </Typography>
                   <Typography>
                     该验证码的有效期为30分钟。
                   </Typography>
                 </Box>
                 <Box component='div' mt={3} width={190} sx={{marginLeft: 'auto', marginRight: 'auto'}}>
-                  {/*<CssTextField*/}
                   <TextField
                     fullWidth
                     size='small'
                     variant='outlined'
+                    value={verifyCode}
                     inputProps={{
                       maxLength: 6,
                       style: {
                         textAlign: 'center',
-                        letterSpacing: '1em',
+                        letterSpacing: '.9em',
                         paddingLeft: '1.5em',
                         width: '100%',
                       },
                     }}
+                    onChange={handleVerifyChange}
                     sx={{margin: '0 auto'}}
                   />
                 </Box>
                 <Box component='div' mt={3}>
                   <Button className='block bg-gradient-to-r w-[260px] text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd] ml-auto mr-auto'
-                          onClick={handleSubmit(onSubmit)}
+                          onClick={handleSubmit(onVerifyEmail)}
                   >
                     验证邮箱
                   </Button>
@@ -272,6 +318,12 @@ export default function SignUp() {
                     <p className='text-xs' id='countdown'>
                       {`已重新发送验证码，距离下一次重新发送还剩 ${resendTimeRef.current !== undefined && countDownTimeRef.current !== undefined ? format(new Date(resendTimeRef.current.getTime() - countDownTimeRef.current.getTime()), 'MM:dd') : null}`}
                     </p>
+                  </div>
+                </Box>
+                <Divider sx={{marginTop: '1.5em', marginBottom: '1.5em'}}/>
+                <Box component='div'>
+                  <div className='text-center text-sm'>
+                    <p>如果您在收件箱中没有看到它，请检查您的垃圾邮件文件夹。</p>
                   </div>
                 </Box>
               </div>

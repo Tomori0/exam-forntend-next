@@ -1,12 +1,13 @@
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  Alert,
   Avatar,
   Box,
   Button,
   Card, CardContent,
   Container, FormControl, FormHelperText,
-  Grid, IconButton, Input, InputAdornment, InputLabel,
+  Grid, IconButton, Input, InputAdornment, InputLabel, Snackbar,
   TextField,
   Typography
 } from "@mui/material";
@@ -35,6 +36,8 @@ const schema = yup.object().shape({
 export default function SignIn() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [isError, setIsError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
@@ -54,9 +57,14 @@ export default function SignIn() {
       },
       data: {username: data.email, password: data.password},
     }).then((response: AxiosResponse<LoginResponse>) => {
-      sessionStorage.setItem('token', response.data.token)
-      sessionStorage.setItem('tokenHead', response.data.tokenHead)
-      router.push('/dashboard')
+      if (response.status === 200) {
+        sessionStorage.setItem('token', response.data.token)
+        sessionStorage.setItem('tokenHead', response.data.tokenHead)
+        router.push('/dashboard')
+      } else {
+        setErrorMessage(response.statusText)
+        setIsError(true)
+      }
     }).catch(error => {
       console.log(error)
     })
@@ -132,6 +140,11 @@ export default function SignIn() {
                   </div>
                 </CardContent>
               </Card>
+              <Snackbar open={isError} autoHideDuration={6000} onClose={() => setIsError(false)} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                <Alert onClose={() => setIsError(false)} severity='error' sx={{ width: '100%' }}>
+                  {errorMessage}
+                </Alert>
+              </Snackbar>
             </Grid>
           </Grid>
         </Container>
