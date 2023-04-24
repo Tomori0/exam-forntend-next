@@ -212,10 +212,27 @@ function ResetPassword({email, successToken}: { email: string, successToken: str
   };
 
   const onResend = () => {
-    const date = new Date(new Date().getTime() + 3 * 60 * 1000)
-    countDownTimeRef.current = new Date()
-    resendTimeRef.current = date
-    setResendTime(date)
+    serviceAxios({
+      url: '/api/auth/resend',
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      data: {
+        email: email,
+        token: successToken,
+        type: 2
+      }
+    }).then((response) => {
+      if (response.status === 200) {
+        const date = new Date(new Date().getTime() + 3 * 60 * 1000)
+        countDownTimeRef.current = new Date()
+        resendTimeRef.current = date
+        setResendTime(date)
+      }
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
   return (
@@ -256,6 +273,9 @@ function ResetPassword({email, successToken}: { email: string, successToken: str
               type='text'
               inputProps={{maxLength: 6}}
               aria-describedby={'verify-code-error-text'}
+              onChange={(e) => {
+                e.target.value = e.target.value.toUpperCase();
+              }}
             />
             <FormHelperText sx={{color: 'error.main'}} id='verify-code-error-text'>{errors.verifyCode?.message}</FormHelperText>
           </FormControl>

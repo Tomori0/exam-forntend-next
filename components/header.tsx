@@ -54,6 +54,7 @@ export default function Header() {
   const handleLogout = () => {
     sessionStorage.clear()
     setAuth(false)
+    setAnchorEl(null)
     router.push('/')
   }
 
@@ -93,8 +94,11 @@ export default function Header() {
                 aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
+                sx={{padding: 0}}
               >
-                <Avatar src={user?.avatar}>{user?.avatar ?? <AccountCircle />}</Avatar>
+                {user?.avatar ? <Avatar src={user?.avatar}></Avatar>
+                  : <AccountCircle sx={{fontSize: '48px'}} />
+                }
               </IconButton>
               <Menu
                 id="menu-appbar"

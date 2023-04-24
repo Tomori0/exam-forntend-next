@@ -52,6 +52,7 @@ export default function SignUp() {
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [verifyCode, setVerifyCode] = useState<string>('');
+  const [resendTime, setResendTime] = useState<Date|undefined>(undefined);
   const resendTimeRef = useRef<Date|undefined>(undefined);
   const countDownTimeRef = useRef<Date|undefined>(undefined);
 
@@ -69,6 +70,11 @@ export default function SignUp() {
         if (newTime.getTime() > resendTimeRef.current.getTime()) {
           resendTimeRef.current = undefined
           countDownTimeRef.current = undefined
+          setResendTime(undefined)
+          const countdownElement = document.getElementById('countdown');
+          if (countdownElement !== null) {
+            countdownElement.textContent = `已重新发送验证码，距离下一次重新发送还剩 03:00`;
+          }
         } else {
           countDownTimeRef.current = newTime
           const countdownElement = document.getElementById('countdown');
@@ -135,9 +141,27 @@ export default function SignUp() {
   };
 
   const onResend = () => {
-    const date = new Date(new Date().getTime() + 3 * 60 * 1000)
-    countDownTimeRef.current = new Date()
-    resendTimeRef.current = date
+    serviceAxios({
+      url: '/api/auth/resend',
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      data: {
+        email: watch('email'),
+        token: successToken,
+        type: 1
+      }
+    }).then((response) => {
+      if (response.status === 200) {
+        const date = new Date(new Date().getTime() + 3 * 60 * 1000)
+        countDownTimeRef.current = new Date()
+        resendTimeRef.current = date
+        setResendTime(date)
+      }
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
   return (
@@ -311,12 +335,12 @@ export default function SignUp() {
                   >
                     验证邮箱
                   </Button>
-                  <div className={`text-center mt-3 ${resendTimeRef.current !== undefined && 'hidden' }`}>
-                    <p className='text-xs underline hover:cursor-pointer hover:no-underline' onClick={onResend}>重新发送验证码</p>
-                  </div>
-                  <div className={`text-center mt-3 ${resendTimeRef.current === undefined && 'hidden' }`}>
-                    <p className='text-xs' id='countdown'>
-                      {`已重新发送验证码，距离下一次重新发送还剩 ${resendTimeRef.current !== undefined && countDownTimeRef.current !== undefined ? format(new Date(resendTimeRef.current.getTime() - countDownTimeRef.current.getTime()), 'MM:dd') : null}`}
+                  <div className='text-center mt-3'>
+                    <p className={`text-xs underline hover:cursor-pointer hover:no-underline ${resendTime !== undefined ? 'hidden' : ''}`} onClick={onResend}>
+                      重新发送验证码
+                    </p>
+                    <p className={`text-xs ${resendTime === undefined ? 'hidden' : ''}`} id='countdown'>
+                      {`已重新发送验证码，距离下一次重新发送还剩 03:00`}
                     </p>
                   </div>
                 </Box>
