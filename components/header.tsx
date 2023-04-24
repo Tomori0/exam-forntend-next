@@ -4,18 +4,18 @@ import {
   IconButton, Menu, MenuItem,
   Toolbar,
   Typography
-} from "@mui/material";
-import {AccountCircle} from "@mui/icons-material";
-import {MouseEvent, useEffect, useState} from "react";
-import Link from "next/link";
+} from '@mui/material';
+import {AccountCircle} from '@mui/icons-material';
+import {MouseEvent, useEffect, useState} from 'react';
+import Link from 'next/link';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
 import QuizIcon from '@mui/icons-material/Quiz';
 import ExplicitIcon from '@mui/icons-material/Explicit';
-import {useRouter} from "next/router";
-import {UserInfo} from "../interface/UserInfo";
+import {useRouter} from 'next/router';
+import {UserInfo} from '../interface/UserInfo';
 
 export default function Header() {
   const [navValue, setNavValue] = useState<number>(0)
@@ -66,11 +66,11 @@ export default function Header() {
   if (auth) {
     return (
       <Box sx={{ flexGrow: 1, justifyContent: 'center' }}>
-        <AppBar position="static">
+        <AppBar position='static'>
           <Toolbar>
             <Link href={'/dashboard'} className='flex'>
               <Avatar src='/images/logo.svg' sx={{marginRight: '12px', display: 'inline-block'}}></Avatar>
-              <Typography variant="h6" component='div' sx={{height: '40px', lineHeight: '40px'}} className='hidden md:inline-block'>
+              <Typography variant='h6' component='div' sx={{height: '40px', lineHeight: '40px'}} className='hidden md:inline-block'>
                 玖义考试
               </Typography>
             </Link>
@@ -80,20 +80,20 @@ export default function Header() {
                 value={navValue}
                 sx={{backgroundColor: 'primary.main'}}
               >
-                <BottomNavigationAction label="首页" icon={<HomeIcon />} onClick={() => changePage(0, '/dashboard')} />
-                <BottomNavigationAction label="练习" icon={<QuizIcon />} onClick={() => changePage(1, '/practise')} />
-                <BottomNavigationAction label="考试" icon={<ExplicitIcon />} onClick={() => changePage(2, '/examination')} />
-                <BottomNavigationAction label="AI解惑" icon={<PsychologyAltIcon />} onClick={() => changePage(3, '/aiChat')} />
+                <BottomNavigationAction label='首页' icon={<HomeIcon />} onClick={() => changePage(0, '/dashboard')} />
+                <BottomNavigationAction label='练习' icon={<QuizIcon />} onClick={() => changePage(1, '/practise')} />
+                <BottomNavigationAction label='考试' icon={<ExplicitIcon />} onClick={() => changePage(2, '/examination')} />
+                <BottomNavigationAction label='AI解惑' icon={<PsychologyAltIcon />} onClick={() => changePage(3, '/aiChat')} />
               </BottomNavigation>
             </div>
             <div>
               <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
+                size='large'
+                aria-label='account of current user'
+                aria-controls='menu-appbar'
+                aria-haspopup='true'
                 onClick={handleMenu}
-                color="inherit"
+                color='inherit'
                 sx={{padding: 0}}
               >
                 {user?.avatar ? <Avatar src={user?.avatar}></Avatar>
@@ -101,7 +101,7 @@ export default function Header() {
                 }
               </IconButton>
               <Menu
-                id="menu-appbar"
+                id='menu-appbar'
                 anchorEl={anchorEl}
                 anchorOrigin={{
                   vertical: 'top',

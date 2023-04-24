@@ -23,9 +23,9 @@ import {LocalizationProvider, MobileDatePicker} from '@mui/x-date-pickers';
 import Head from 'next/head';
 import serviceAxios from '../../../util/serviceAxios';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
-import {AxiosResponse} from "axios";
-import {LoginResponse} from "../../../interface/LoginResponse";
-import {useRouter} from "next/router";
+import {AxiosResponse} from 'axios';
+import {LoginResponse} from '../../../interface/LoginResponse';
+import {useRouter} from 'next/router';
 
 type Form = {
   email: string,
@@ -73,7 +73,7 @@ export default function SignUp() {
           setResendTime(undefined)
           const countdownElement = document.getElementById('countdown');
           if (countdownElement !== null) {
-            countdownElement.textContent = `已重新发送验证码，距离下一次重新发送还剩 03:00`;
+            countdownElement.textContent = '已重新发送验证码，距离下一次重新发送还剩 03:00';
           }
         } else {
           countDownTimeRef.current = newTime

@@ -1,34 +1,34 @@
-import Head from "next/head";
-import ExamList from "../../../interface/ExamList";
-import {Avatar, Box, Card, CardContent, Container, Unstable_Grid2 as Grid, Typography} from "@mui/material";
-import {useEffect} from "react";
+import Head from 'next/head';
+import ExamList from '../../../interface/ExamList';
+import {Avatar, Box, Card, CardContent, Container, Unstable_Grid2 as Grid, Typography} from '@mui/material';
+import {useEffect} from 'react';
 
 export default function Dashboard() {
 
   const testData: ExamList[] = [{
-    categoryName: "Linux Professional Institute",
+    categoryName: 'Linux Professional Institute',
     examDetailList: [{
       examId: 1,
-      examCode: "lpic101-500",
-      examName: "LPI 101-500 Exam",
-      categoryId: "291d411634ecbbc2c8e9547febe637d5"
+      examCode: 'lpic101-500',
+      examName: 'LPI 101-500 Exam',
+      categoryId: '291d411634ecbbc2c8e9547febe637d5'
     }, {
       examId: 2,
-      examCode: "lpic102-500",
-      examName: "LPI 102-500 Exam",
-      categoryId:"291d411634ecbbc2c8e9547febe637d5"
+      examCode: 'lpic102-500',
+      examName: 'LPI 102-500 Exam',
+      categoryId:'291d411634ecbbc2c8e9547febe637d5'
     }]}, {
-    categoryName: "Salesforce",
+    categoryName: 'Salesforce',
     examDetailList: [{
       examId: 3,
-      examCode: "sfCertifiedAdvancedAdministrator",
-      examName: "Salesforce Certified Advanced Administrator Exam",
-      categoryId: "8ec8e5b31acf36ea3119df7525773376"
+      examCode: 'sfCertifiedAdvancedAdministrator',
+      examName: 'Salesforce Certified Advanced Administrator Exam',
+      categoryId: '8ec8e5b31acf36ea3119df7525773376'
     }, {
       examId: 4,
-      examCode: "ADM-201-JPN",
-      examName: "Salesforce Certified Administrator Japanese",
-      categoryId: "8ec8e5b31acf36ea3119df7525773376"
+      examCode: 'ADM-201-JPN',
+      examName: 'Salesforce Certified Administrator Japanese',
+      categoryId: '8ec8e5b31acf36ea3119df7525773376'
     }]
   }]
 

@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Head from 'next/head';
 
 export default function Dashboard() {
   return (
@@ -45,7 +45,7 @@ export default function Dashboard() {
       {/*            </div>*/}
       {/*          </CardContent>*/}
       {/*        </Card>*/}
-      {/*        <Alert className={`absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] ${isSuccess || 'hidden'}`} severity="success">*/}
+      {/*        <Alert className={`absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] ${isSuccess || 'hidden'}`} severity='success'>*/}
       {/*          {`请前往邮箱 ${watch('email')} 验证`}*/}
       {/*        </Alert>*/}
       {/*      </Grid>*/}

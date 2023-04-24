@@ -19,9 +19,9 @@ import {useEffect, useRef, useState} from 'react';
 import {format} from 'date-fns';
 import Head from 'next/head';
 import serviceAxios from '../../../util/serviceAxios';
-import {useRouter} from "next/router";
-import {AxiosResponse} from "axios";
-import {LoginResponse} from "../../../interface/LoginResponse";
+import {useRouter} from 'next/router';
+import {AxiosResponse} from 'axios';
+import {LoginResponse} from '../../../interface/LoginResponse';
 
 type EmailForm = {
   email: string,

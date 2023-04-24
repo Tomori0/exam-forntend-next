@@ -10,17 +10,17 @@ import {
   Grid, IconButton, Input, InputAdornment, InputLabel, Snackbar,
   TextField,
   Typography
-} from "@mui/material";
+} from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import {useState} from "react";
-import Link from "next/link";
-import {useForm} from "react-hook-form";
-import Head from "next/head";
-import serviceAxios from "../../util/serviceAxios";
-import {AxiosResponse} from "axios";
-import {LoginResponse} from "../../interface/LoginResponse";
-import {useRouter} from "next/router";
+import {useState} from 'react';
+import Link from 'next/link';
+import {useForm} from 'react-hook-form';
+import Head from 'next/head';
+import serviceAxios from '../../util/serviceAxios';
+import {AxiosResponse} from 'axios';
+import {LoginResponse} from '../../interface/LoginResponse';
+import {useRouter} from 'next/router';
 
 type Form = {
   email: string,
@@ -28,8 +28,8 @@ type Form = {
 }
 
 const schema = yup.object().shape({
-  email: yup.string().required("请输入邮箱。").email('请输入正确的邮箱格式。'),
-  password: yup.string().required("请输入密码。").matches(/^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]{8,16}$/, "密码满足大小写字母，数字和特殊字符中任意三种(8-16位)"),
+  email: yup.string().required('请输入邮箱。').email('请输入正确的邮箱格式。'),
+  password: yup.string().required('请输入密码。').matches(/^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]{8,16}$/, '密码满足大小写字母，数字和特殊字符中任意三种(8-16位)'),
 });
 
 
@@ -50,10 +50,10 @@ export default function SignIn() {
   const onSubmit = async (data: Form) => {
     // const response: AxiosResponse<LoginResponse> = await
     serviceAxios({
-      url: "/api/auth/login",
-      method: "post",
+      url: '/api/auth/login',
+      method: 'post',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       data: {username: data.email, password: data.password},
     }).then((response: AxiosResponse<LoginResponse>) => {
@@ -75,13 +75,13 @@ export default function SignIn() {
       <Head><title>登录 - 玖义考试</title></Head>
       <Box
         sx={{
-          width: "100%",
-          paddingTop: "1rem",
-          paddingBottom: "1rem",
+          width: '100%',
+          paddingTop: '1rem',
+          paddingBottom: '1rem',
         }}
       >
         <Container>
-          <Grid container direction="column" alignItems="center" justifyContent="center" className='relative h-screen'>
+          <Grid container direction='column' alignItems='center' justifyContent='center' className='relative h-screen'>
             <Grid item xs={12}>
               <Card sx={{width: '380px'}} className='absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]'>
                 <CardContent sx={{margin: '12px'}}>
@@ -90,21 +90,21 @@ export default function SignIn() {
                     登录账号
                   </Typography>
                   <form>
-                    <FormControl required sx={{ margin: '24px 0' }} fullWidth variant="standard">
+                    <FormControl required sx={{ margin: '24px 0' }} fullWidth variant='standard'>
                       <TextField
                         label='邮箱'
                         required
                         fullWidth
-                        variant="standard"
+                        variant='standard'
                         error={Boolean(errors.email)}
                         helperText={errors.email?.message}
                         {...register<keyof Form>('email')}
                       />
                     </FormControl>
-                    <FormControl required sx={{ marginBottom: '24px' }} fullWidth variant="standard">
-                      <InputLabel htmlFor="standard-adornment-password">密码</InputLabel>
+                    <FormControl required sx={{ marginBottom: '24px' }} fullWidth variant='standard'>
+                      <InputLabel htmlFor='standard-adornment-password'>密码</InputLabel>
                       <Input
-                        id="standard-adornment-password"
+                        id='standard-adornment-password'
                         fullWidth
                         {...register<keyof Form>('password')}
                         error={Boolean(errors.password)}
@@ -112,9 +112,9 @@ export default function SignIn() {
                         inputProps={{maxLength: 16}}
                         aria-describedby={'password-error-text'}
                         endAdornment={
-                          <InputAdornment position="end">
+                          <InputAdornment position='end'>
                             <IconButton
-                              aria-label="toggle password visibility"
+                              aria-label='toggle password visibility'
                               onClick={handleClickShowPassword}
                             >
                               {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -122,7 +122,7 @@ export default function SignIn() {
                           </InputAdornment>
                         }
                       />
-                      <FormHelperText sx={{color: 'error.main'}} id="password-error-text">{errors.password?.message}</FormHelperText>
+                      <FormHelperText sx={{color: 'error.main'}} id='password-error-text'>{errors.password?.message}</FormHelperText>
                     </FormControl>
                     <Button className='bg-gradient-to-r w-full text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd]'
                             onClick={handleSubmit(onSubmit)}
