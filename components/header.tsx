@@ -60,7 +60,7 @@ export default function Header() {
 
   const changePage = (navValue: number, path: string) => {
     setNavValue(navValue)
-    router.push(path).then(r => console.log(r))
+    router.push(path)
   }
 
   if (auth) {
@@ -69,8 +69,8 @@ export default function Header() {
         <AppBar position='static'>
           <Toolbar>
             <Link href={'/dashboard'} className='flex'>
-              <Avatar src='/images/logo.svg' sx={{marginRight: '12px', display: 'inline-block'}}></Avatar>
-              <Typography variant='h6' component='div' sx={{height: '40px', lineHeight: '40px'}} className='hidden md:inline-block'>
+              <Avatar src='/images/logo.svg' sx={{display: 'inline-block'}}></Avatar>
+              <Typography variant='h6' component='div' sx={{height: '40px', marginLeft: '12px', lineHeight: '40px'}} className='hidden md:inline-block'>
                 玖义考试
               </Typography>
             </Link>
@@ -81,7 +81,7 @@ export default function Header() {
                 sx={{backgroundColor: 'primary.main'}}
               >
                 <BottomNavigationAction label='首页' icon={<HomeIcon />} onClick={() => changePage(0, '/dashboard')} />
-                <BottomNavigationAction label='练习' icon={<QuizIcon />} onClick={() => changePage(1, '/practise')} />
+                <BottomNavigationAction label='刷题' icon={<QuizIcon />} onClick={() => changePage(1, '/practise')} />
                 <BottomNavigationAction label='考试' icon={<ExplicitIcon />} onClick={() => changePage(2, '/examination')} />
                 <BottomNavigationAction label='AI解惑' icon={<PsychologyAltIcon />} onClick={() => changePage(3, '/aiChat')} />
               </BottomNavigation>

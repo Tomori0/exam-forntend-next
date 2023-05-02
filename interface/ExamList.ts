@@ -1,6 +1,7 @@
 import ExamDetail from "./ExamDetail";
 
 export default interface ExamList {
+  categoryId: number
   categoryName: string
-  examDetailList: ExamDetail[]
+  infoList: ExamDetail[]
 }

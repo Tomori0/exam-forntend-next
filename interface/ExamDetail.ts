@@ -1,6 +1,7 @@
 export default interface ExamDetail {
+  infoId: number
   categoryId: string
   examCode: string
-  examId: number
-  examName: string
+  examTitle: string
+  examLogo?: string
 }

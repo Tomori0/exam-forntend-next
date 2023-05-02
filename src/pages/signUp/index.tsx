@@ -165,7 +165,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className='content-center h-screen'>
+    <div>
       <Head><title>注册 - 玖义考试</title></Head>
       <Box
         sx={{

@@ -18,7 +18,7 @@ export default function Dashboard() {
   }, [])
 
   return (
-    <div className='content-center h-screen'>
+    <div>
       <Head><title>首页 - 玖义考试</title></Head>
     </div>
   )

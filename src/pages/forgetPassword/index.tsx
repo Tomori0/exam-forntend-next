@@ -78,7 +78,7 @@ export default function ForgetPassword() {
   };
 
   return (
-    <div className='content-center h-screen'>
+    <div>
       <Head><title>更改密码 - 玖义考试</title></Head>
       <Box
         sx={{

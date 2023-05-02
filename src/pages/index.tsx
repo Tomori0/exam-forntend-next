@@ -71,7 +71,7 @@ export default function SignIn() {
   };
 
   return (
-    <div className='content-center h-screen'>
+    <div>
       <Head><title>登录 - 玖义考试</title></Head>
       <Box
         sx={{
