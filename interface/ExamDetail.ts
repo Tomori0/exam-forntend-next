@@ -4,4 +4,5 @@ export default interface ExamDetail {
   examCode: string
   examTitle: string
   examLogo?: string
+  expireTime?: string
 }

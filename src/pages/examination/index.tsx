@@ -1,25 +1,26 @@
 import Head from 'next/head';
 import ExamList from '../../../interface/ExamList';
-import {Avatar, Box, Card, CardContent, Container, Unstable_Grid2 as Grid, Typography} from '@mui/material';
+import {Avatar, Box, Card, CardContent, Container, Typography, Unstable_Grid2 as Grid} from '@mui/material';
 import {useEffect, useState} from 'react';
-import serviceAxios from '../../../util/serviceAxios';
-import {AxiosResponse} from 'axios';
 import Link from 'next/link';
+import useServiceAxios from "../../../util/useServiceAxios";
+import {useRouter} from "next/router";
 
 export default function Examination() {
 
   const [examList, setExamList] = useState<ExamList[]|undefined>(undefined)
-
+  const router = useRouter()
   useEffect(() => {
-    serviceAxios({
-      url: '/api/exam/info/list',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8'
-      },
-    }).then((response: AxiosResponse<ExamList[]>) => {
+    async function fetchData() {
+      const response = await useServiceAxios<ExamList[], any>({
+        url: '/api/exam/info/list',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8'
+        },
+      }, router)
       if (response.status !== 200) {
-
+        alert(response.statusText)
       } else {
         const data = response.data;
         data.sort((a, b) => {
@@ -32,9 +33,9 @@ export default function Examination() {
         })
         setExamList(data)
       }
-    }).catch(error => {
-      console.log(error)
-    })
+    }
+
+    fetchData()
   }, [])
 
   return (

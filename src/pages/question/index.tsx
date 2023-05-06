@@ -1,12 +1,17 @@
 import Head from 'next/head';
 import {Box, Button, Container, Pagination, Skeleton, Stack, Typography} from '@mui/material';
 import {ChangeEvent, useEffect, useState} from 'react';
-import serviceAxios from '../../../util/serviceAxios';
-import {AxiosResponse} from 'axios';
 import {useRouter} from 'next/router';
 import ExamQuestion from '../../../interface/ExamQuestion';
 import Page from '../../../interface/Page';
 import * as CryptoJS from 'crypto-js';
+import {unified} from 'unified';
+import remarkParse from 'remark-parse';
+import remarkRehype from 'remark-rehype';
+import rehypeStringify from 'rehype-stringify';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
+import useServiceAxios from "../../../util/useServiceAxios";
 
 export default function Question() {
 
@@ -20,18 +25,19 @@ export default function Question() {
   const [token, setToken] = useState<string>('')
 
   useEffect(() => {
-    serviceAxios({
-      url: '/api/exam/question/get',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8'
-      },
-      params: {
-        infoId: router.query.infoId,
-        size: 1,
-        page: currentPage - 1
-      }
-    }).then((response: AxiosResponse<Page<ExamQuestion[]>>) => {
+    const fetchData = async () => {
+      const response = await useServiceAxios<Page<ExamQuestion[]>, any>({
+        url: '/api/exam/question/get',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8'
+        },
+        params: {
+          infoId: router.query.infoId,
+          size: 1,
+          page: currentPage - 1
+        }
+      }, router)
       if (response.status !== 200) {
 
       } else {
@@ -45,9 +51,8 @@ export default function Question() {
         }
         setIsLoading(false)
       }
-    }).catch(error => {
-      console.log(error)
-    })
+    }
+    fetchData()
   }, [router.query.infoId, currentPage])
 
   const handleChangePage = (event: ChangeEvent<unknown>, value: number) => {
@@ -63,15 +68,16 @@ export default function Question() {
     return encryptedBytes.toString();
   }
 
-  const handleGetAnswer = () => {
+  const handleGetAnswer = async () => {
+    if (answer !== '查看答案') {
+      return
+    }
     const infoId = router.query.infoId as string ?? ''
     const questionId = question?.questionId ?? ''
     const date = new Date()
-    console.log(token)
-    console.log(infoId + questionId.toString() + date.getTime() + token)
     const message = infoId + questionId.toString() + date.getTime() + token
     const verify = encode(token, message)
-    serviceAxios({
+    const response = await useServiceAxios<string, any>({
       url: '/api/exam/question/answer',
       method: 'post',
       headers: {
@@ -83,15 +89,19 @@ export default function Question() {
         timestamp: date.getTime(),
         verify: verify
       }
-    }).then((response: AxiosResponse<string>) => {
-      if (response.status !== 200) {
+    }, router)
+    if (response.status !== 200) {
 
-      } else {
-        setAnswer(response.data)
-      }
-    }).catch(error => {
-      console.log(error)
-    })
+    } else {
+      const md = await unified()
+        .use(remarkParse)
+        .use(remarkMath)
+        .use(remarkRehype)
+        .use(rehypeKatex)
+        .use(rehypeStringify)
+        .process(response.data)
+      setAnswer(String(md))
+    }
   };
 
   return (
@@ -121,7 +131,7 @@ export default function Question() {
                     Object.entries(JSON.parse(question.questionBody)).map(([key, value]) => {
                       return (
                         // <Button variant='outlined' className='w-full text-left justify-start mt-2 mb-2 bg-[#90caf9] text-black hover:bg-[#a6d4fa]'>
-                        <Button variant='contained' className='bg-gradient-to-r w-full text-left justify-start mt-2 mb-2 from-[#c9aa62] to-[#c7c7c7] text-white'>
+                        <Button key={key} variant='contained' className='bg-gradient-to-r w-full text-left justify-start mt-2 mb-2 from-[#c9aa62] to-[#c7c7c7] text-white'>
                           {key}. {value as string}
                         </Button>
                       )
@@ -129,7 +139,7 @@ export default function Question() {
                   }
                   <Button variant='contained' className='bg-gradient-to-r w-full text-left justify-start mt-2 mb-2 from-[#c9aa62] to-[#c7c7c7] text-white'
                     onClick={handleGetAnswer}>
-                    {answer}
+                    <div dangerouslySetInnerHTML = {{ __html: answer }}></div>
                   </Button>
                   <div className={'flex justify-center mt-2'}>
                     <Stack spacing={2}>

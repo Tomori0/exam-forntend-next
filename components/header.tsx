@@ -55,6 +55,7 @@ export default function Header() {
     sessionStorage.clear()
     setAuth(false)
     setAnchorEl(null)
+    setNavValue(0)
     router.push('/')
   }
 
