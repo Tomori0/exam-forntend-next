@@ -29,7 +29,7 @@ export default function Practise() {
         })
         data.forEach(ele => {
           ele.infoList.sort((a, b) => {
-            return b.infoId - a.infoId
+            return Number(b.infoId) - Number(a.infoId)
           })
         })
         setExamList(data)
@@ -61,7 +61,7 @@ export default function Practise() {
                   {exam.infoList.map(info => {
                     return (
                       <Grid key={info.infoId} xs={24} md={12} lg={8}>
-                        <Link href={'/question?infoId=' + info.infoId}>
+                        <Link href={'/questionP?infoId=' + info.infoId}>
                           <Card className={'w-full'}>
                             <CardContent sx={{margin: '12px'}}>
                               <Avatar src={info.examLogo ?? '/images/logo.svg'} sx={{width: '86px', height: '86px', margin: '24px auto'}}></Avatar>

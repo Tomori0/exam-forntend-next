@@ -1,5 +1,5 @@
 export default interface ExamQuestion {
-  questionId: number
+  questionId: string
   questionType: number
   questionHead: string
   questionBody: string

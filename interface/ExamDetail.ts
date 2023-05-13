@@ -1,5 +1,5 @@
 export default interface ExamDetail {
-  infoId: number
+  infoId: string
   categoryId: string
   examCode: string
   examTitle: string

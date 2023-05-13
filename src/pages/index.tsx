@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import {useState} from 'react';
+import {KeyboardEvent, useState} from 'react';
 import Link from 'next/link';
 import {useForm} from 'react-hook-form';
 import Head from 'next/head';
@@ -54,6 +54,14 @@ export default function SignIn() {
     handleSubmit,
     formState: { errors },
   } = useForm<Form>({ resolver: yupResolver(schema), mode: 'onChange' });
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSubmit(onSubmit)()
+    } else {
+      return event
+    }
+  };
 
   const onSubmit = async (data: Form) => {
     // const response: AxiosResponse<LoginResponse> = await
@@ -117,7 +125,7 @@ export default function SignIn() {
                         {...register<keyof Form>('password')}
                         error={Boolean(errors.password)}
                         type={showPassword ? 'text' : 'password'}
-                        inputProps={{maxLength: 16}}
+                        inputProps={{maxLength: 16, onKeyDown: handleKeyDown}}
                         aria-describedby={'password-error-text'}
                         endAdornment={
                           <InputAdornment position='end'>
