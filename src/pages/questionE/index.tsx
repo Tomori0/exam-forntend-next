@@ -11,12 +11,12 @@ import {
   Stack, TextField,
   Typography
 } from '@mui/material';
-import {DataGrid, GridColDef} from '@mui/x-data-grid'
-import {ChangeEvent, MouseEvent, useEffect, useState} from 'react';
+import {DataGrid, GridCellParams, GridColDef} from '@mui/x-data-grid'
+import {ChangeEvent, MouseEvent, useEffect, useRef, useState} from 'react';
 import {useRouter} from 'next/router';
 import ExamQuestion from '../../../interface/ExamQuestion';
 import Page from '../../../interface/Page';
-// import * as CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 import useServiceAxios from "../../../util/useServiceAxios";
 import ExamDetail from "../../../interface/ExamDetail";
 import moment from "moment";
@@ -24,13 +24,8 @@ import moment from "moment";
 interface Answer {
   id: number
   answer: string
-  checkFlag: boolean
+  correctAnswer: string
 }
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  { field: 'answer', headerName: '作答', width: 150 },
-]
 
 export default function Question() {
 
@@ -45,7 +40,34 @@ export default function Question() {
   const [endTime, setEndTime] = useState<Date>(new Date())
   const [countDownTime, setCountDownTime] = useState<string>('00:00:00')
   const [open, setOpen] = useState<boolean>(false)
+  const [submitOpen, setSubmitOpen] = useState<boolean>(false)
+  const [submitMessage, setSubmitMessage] = useState<string>('')
+  const [tipsOpen, setTipsOpen] = useState<boolean>(false)
+  const [tipsMessage] = useState<string>('距离考试结束还剩5分钟，时间到后将会自动提交')
   const [inputAnswer, setInputAnswer] = useState<string>('')
+  const hasTipsOpen = useRef<boolean>(false)
+
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 90,
+      renderCell: (params: GridCellParams<Answer>) => {
+        const page = params.row.id;
+        return <div className={'hover:cursor-pointer'} onClick={() => {
+          setCurrentPage(page)
+          setOpen(false)
+        }}>{page}</div>
+      },
+    },
+    { field: 'answer', headerName: '作答', width: 150 },
+    { field: 'correctAnswer', headerName: '正确答案', width: 150,
+      renderCell: (params: GridCellParams<Answer>) => {
+        if (params.row.correctAnswer !== '') {
+          return <div className={`${params.row.correctAnswer == params.row.answer ? 'bg-green-600' : 'bg-red-600'} w-full h-full leading-[52px]`}>{params.row.correctAnswer}</div>
+        } else {
+          return <div>{params.row.correctAnswer}</div>
+        }
+      }
+    }
+  ]
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,8 +110,11 @@ export default function Question() {
         const hours = parseInt(`${(times / 60 / 60) % 24}`); //计算小时数 转化为整数
         const minutes = parseInt(`${(times / 60) % 60}`); //计算分钟数 转化为整数
         const seconds = parseInt(`${times % 60}`); //计算描述 转化为整数
-        // countDownTimeRef.current = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`
         setCountDownTime(`${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`)
+        if (hours === 0 && minutes < 5 && !hasTipsOpen.current) {
+          hasTipsOpen.current = true
+          setTipsOpen(true)
+        }
       } else {
         setCountDownTime('00:00:00')
       }
@@ -123,12 +148,13 @@ export default function Question() {
             setAnswer(Array.from({ length }, (_, index) => ({
               id: index + 1,
               answer: '',
-              checkFlag: false,
+              correctAnswer: '',
             })))
+          } else {
+            setInputAnswer(answer[currentPage - 1].answer)
           }
           setTotalPage(data.totalPages)
           setQuestion(data.content[0])
-          setInputAnswer(answer[currentPage - 1].answer)
         }
         setIsLoading(false)
       }
@@ -140,13 +166,13 @@ export default function Question() {
     setCurrentPage(value)
   };
 
-  // function encode(secret: string, message: string) {
-  //   const key = CryptoJS.enc.Base64.parse(secret);
-  //   const encryptedBytes = CryptoJS.AES.encrypt(message, key, {
-  //     mode: CryptoJS.mode.ECB,
-  //   });
-  //   return encryptedBytes.toString();
-  // }
+  function encode(secret: string, message: string) {
+    const key = CryptoJS.enc.Base64.parse(secret);
+    const encryptedBytes = CryptoJS.AES.encrypt(message, key, {
+      mode: CryptoJS.mode.ECB,
+    });
+    return encryptedBytes.toString();
+  }
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     if (question?.questionType === 1) {
@@ -171,8 +197,47 @@ export default function Question() {
     }
   }
 
-  const preSubmit = () => {
+  const checkSubmit = () => {
     setOpen(true)
+  }
+
+  const preSubmit = () => {
+    if (answer.filter((item) => item.answer === '').length > 0) {
+      setSubmitMessage('还有题没做完，确定要提交吗？')
+    } else {
+      setSubmitMessage('确定提交')
+    }
+    setSubmitOpen(true)
+  }
+
+  const handleSubmit = async () => {
+    const submitAnswer: string[] = []
+    answer.forEach(ele => {submitAnswer.push(ele.answer)})
+    const infoId = router.query.infoId as string ?? ''
+    const date = new Date()
+    const message = infoId + date.getTime() + examInfo?.token + '[' + submitAnswer.join(',') + ']'
+    console.log(message)
+    const verify = encode(examInfo?.token ? examInfo.token : '', message)
+    const response = await useServiceAxios<string[], any>({
+      url: '/api/exam/question/submit',
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      data: {
+        infoId: router.query.infoId,
+        answer: submitAnswer,
+        timestamp: date.getTime(),
+        verify: verify
+      }
+    }, router)
+    if (response.status !== 200) {
+
+    } else {
+      response.data.forEach((value, index) => {
+        answer[index].correctAnswer = value
+      })
+    }
   }
 
   return (
@@ -201,7 +266,7 @@ export default function Question() {
                 </div>
                 <Button variant='contained'
                         className={`justify-start mt-2 mb-2 text-white bg-[#90caf9]`}
-                        onClick={preSubmit}>
+                        onClick={checkSubmit}>
                   提交
                 </Button>
               </div>
@@ -214,8 +279,8 @@ export default function Question() {
                     {question.questionBody ?
                       Object.entries(JSON.parse(question.questionBody)).map(([key, value]) => {
                         return (
-                          <Button id={`answer-${key}`} key={value as string} variant='contained'
-                                  className={`bg-gradient-to-r w-full text-left justify-start mt-2 mb-2 from-[${inputAnswer.includes(key) ? '#90caf9': '#c9aa62'}] to-[#c7c7c7] text-white`}
+                          <Button id={`answer-${key}`} key={key} variant='contained'
+                                  className={`bg-gradient-to-r w-full text-left justify-start mt-2 mb-2 ${inputAnswer.includes(key) ? 'from-[#90caf9]' : 'from-[#c9aa62]'} to-[#c7c7c7] text-white`}
                                   onClick={handleClick}>
                             {key}. {value as string}
                           </Button>
@@ -223,6 +288,7 @@ export default function Question() {
                       }) :
                       <TextField
                         id="outlined-multiline-static"
+                        className={'mt-2 mb-2'}
                         label="作答区"
                         multiline
                         fullWidth
@@ -253,12 +319,6 @@ export default function Question() {
                 您可以在以下列表中检查您的作答，并且通过前面的勾选框来标记检查完成的试题。
               </DialogContentText>
               <DataGrid
-                sx={{
-                  marginTop: '12px',
-                  '& .Mui-selected': {
-                    color: 'black !important',
-                  },
-                }}
                 rows={answer}
                 columns={columns}
                 initialState={{
@@ -271,13 +331,36 @@ export default function Question() {
                 pageSizeOptions={[5]}
                 checkboxSelection
                 disableRowSelectionOnClick
+                sx={{
+                  marginTop: '12px',
+                  '& .Mui-selected': {
+                    color: 'black !important',
+                  },
+                }}
+                localeText={{footerRowSelected: (count) =>
+                    count !== 1 ? `检查了 ${count.toLocaleString()} 道题` : `检查了 ${count.toLocaleString()} 道题`,}}
               />
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setOpen(false)}>取消</Button>
-              <Button className={`text-white bg-[#c9aa62] hover:bg-[#c9aa62bb]`} onClick={() => console.log('submit')} autoFocus>
+              <Button className={`text-white bg-[#c9aa62] hover:bg-[#c9aa62bb]`} onClick={preSubmit} autoFocus>
                 提交
               </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog open={submitOpen} onClose={() => setSubmitOpen(false)}>
+            <DialogTitle>{submitMessage}</DialogTitle>
+            <DialogActions>
+              <Button onClick={() => setSubmitOpen(false)}>取消</Button>
+              <Button className={`text-white bg-[#c9aa62] hover:bg-[#c9aa62bb]`} onClick={handleSubmit} autoFocus>
+                提交
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog open={tipsOpen} onClose={() => setTipsOpen(false)}>
+            <DialogTitle>{tipsMessage}</DialogTitle>
+            <DialogActions>
+              <Button onClick={() => setTipsOpen(false)}>确认</Button>
             </DialogActions>
           </Dialog>
         </Container>

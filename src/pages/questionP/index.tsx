@@ -27,7 +27,7 @@ export default function Question() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await useServiceAxios<Page<ExamQuestion[]>, any>({
-        url: '/api/exam/question/get',
+        url: '/api/exam/practise/get',
         method: 'GET',
         headers: {
           'Content-Type': 'application/json;charset=utf-8'
@@ -78,7 +78,7 @@ export default function Question() {
     const message = infoId + questionId.toString() + date.getTime() + token
     const verify = encode(token, message)
     const response = await useServiceAxios<string, any>({
-      url: '/api/exam/question/answer',
+      url: '/api/exam/practise/answer',
       method: 'post',
       headers: {
         'Content-Type': 'application/json;charset=utf-8'

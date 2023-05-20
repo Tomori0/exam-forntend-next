@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import {createTheme, ThemeProvider} from '@mui/material';
+import { zhCN } from '@mui/material/locale';
 import Head from 'next/head';
 import Footer from '../../components/footer';
 import Header from '../../components/header';
@@ -20,7 +21,9 @@ const theme = createTheme({
       main: '#d32f2f',
     }
   },
-});
+},
+  zhCN
+);
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
