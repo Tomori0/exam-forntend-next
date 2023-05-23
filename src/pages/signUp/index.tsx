@@ -340,11 +340,14 @@ export default function SignUp() {
                   />
                 </Box>
                 <Box component='div' mt={3}>
-                  <Button className='block bg-gradient-to-r w-[260px] text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd] ml-auto mr-auto'
-                          onClick={handleSubmit(onVerifyEmail)}
-                  >
-                    验证邮箱
-                  </Button>
+                  <div className={'flex'}>
+                    <Button className='block bg-gradient-to-r w-[260px] text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd] ml-auto mr-auto'
+                            sx={{margin: '0 auto'}}
+                            onClick={handleSubmit(onVerifyEmail)}
+                    >
+                      <span className={'text-white'}>验证邮箱</span>
+                    </Button>
+                  </div>
                   <div className='text-center mt-3'>
                     <p className={`text-xs underline hover:cursor-pointer hover:no-underline ${resendTime !== undefined ? 'hidden' : ''}`} onClick={onResend}>
                       重新发送验证码
