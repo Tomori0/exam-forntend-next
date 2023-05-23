@@ -141,7 +141,7 @@ export default function SignIn() {
                     <Button className='bg-gradient-to-r w-full text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd]'
                             onClick={handleSubmit(onSubmit)}
                     >
-                      登录
+                      <span className={'text-white'}>登录</span>
                     </Button>
                   </form>
                   <div className='flex justify-end mt-[24px] text-[#949494]'>
