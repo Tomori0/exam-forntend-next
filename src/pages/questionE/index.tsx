@@ -279,10 +279,10 @@ export default function Question() {
                     {question.questionBody ?
                       Object.entries(JSON.parse(question.questionBody)).map(([key, value]) => {
                         return (
-                          <Button id={`answer-${key}`} key={key} variant='contained'
-                                  className={`bg-gradient-to-r w-full text-left justify-start mt-2 mb-2 ${inputAnswer.includes(key) ? 'from-[#90caf9]' : 'from-[#c9aa62]'} to-[#c7c7c7] text-white`}
+                          <Button id={`answer-${key}`} key={key} variant='contained' sx={{justifyContent: 'flex-start', marginTop: '0.5rem', marginBottom: '0.5rem'}}
+                                  className={`bg-gradient-to-r w-full text-left justify-start mt-2 mb-2 ${inputAnswer.includes(key) ? 'from-[#90caf9]' : 'from-[#c9aa62]'} to-[#c7c7c7]`}
                                   onClick={handleClick}>
-                            {key}. {value as string}
+                            <span className={'text-white'}>{key}. {value as string}</span>
                           </Button>
                         )
                       }) :

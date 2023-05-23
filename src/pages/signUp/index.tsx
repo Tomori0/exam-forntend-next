@@ -289,7 +289,7 @@ export default function SignUp() {
                       />
                       <FormHelperText sx={{color: 'error.main'}} id='confirm-password-error-text'>{errors.confirmPassword?.message}</FormHelperText>
                     </FormControl>
-                    <Button className='bg-gradient-to-r w-full text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd]'
+                    <Button className='bg-gradient-to-r w-full from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd]'
                             onClick={handleSubmit(onSubmit)}
                     >
                       <span className={'text-white'}>注册</span>
@@ -341,7 +341,7 @@ export default function SignUp() {
                 </Box>
                 <Box component='div' mt={3}>
                   <div className={'flex'}>
-                    <Button className='block bg-gradient-to-r w-[260px] text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd] ml-auto mr-auto'
+                    <Button className='block bg-gradient-to-r w-[260px] from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd] ml-auto mr-auto'
                             sx={{margin: '0 auto'}}
                             onClick={handleSubmit(onVerifyEmail)}
                     >

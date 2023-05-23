@@ -131,15 +131,15 @@ export default function Question() {
                     Object.entries(JSON.parse(question.questionBody)).map(([key, value]) => {
                       return (
                         // <Button variant='outlined' className='w-full text-left justify-start mt-2 mb-2 bg-[#90caf9] text-black hover:bg-[#a6d4fa]'>
-                        <Button key={key} variant='contained' sx={{justifyContent: 'flex-start'}}
-                                className='bg-gradient-to-r w-full text-left justify-start mt-2 mb-2 from-[#c9aa62] to-[#c7c7c7] text-white'>
+                        <Button key={key} variant='contained' sx={{justifyContent: 'flex-start', marginTop: '0.5rem', marginBottom: '0.5rem'}}
+                                className='bg-gradient-to-r w-full text-left justify-start mt-2 mb-2 from-[#c9aa62] to-[#c7c7c7]'>
                           <span className={'text-white'}>{key}. {value as string}</span>
                         </Button>
                       )
                     }) : ''
                   }
                   <Button variant='contained' className='bg-gradient-to-r w-full text-left justify-start mt-2 mb-2 from-[#c9aa62] to-[#c7c7c7] text-white'
-                          sx={{color: 'white', justifyContent: 'flex-start'}}
+                          sx={{color: 'white', justifyContent: 'flex-start', marginTop: '0.5rem', marginBottom: '0.5rem'}}
                     onClick={handleGetAnswer}>
                     <div dangerouslySetInnerHTML = {{ __html: answer }}></div>
                   </Button>

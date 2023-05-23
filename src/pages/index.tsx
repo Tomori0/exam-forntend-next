@@ -138,7 +138,7 @@ export default function SignIn() {
                       />
                       <FormHelperText sx={{color: 'error.main'}} id='password-error-text'>{errors.password?.message}</FormHelperText>
                     </FormControl>
-                    <Button className='bg-gradient-to-r w-full text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd]'
+                    <Button className='bg-gradient-to-r w-full from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd]'
                             onClick={handleSubmit(onSubmit)}
                     >
                       <span className={'text-white'}>登录</span>
