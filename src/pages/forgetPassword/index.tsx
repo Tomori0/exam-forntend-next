@@ -339,7 +339,7 @@ function ResetPassword({email, successToken}: { email: string, successToken: str
             className='bg-gradient-to-r w-full text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd]'
             onClick={handleSubmit(onSubmit)}
           >
-            更改密码
+            <span className={'text-white'}>更改密码</span>
           </Button>
         </form>
         <Box component='div' mt={3}>
