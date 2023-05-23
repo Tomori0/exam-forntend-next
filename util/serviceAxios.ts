@@ -11,7 +11,7 @@ switch (env) {
     baseUrl = 'http://127.0.0.1:8080';
     break;
   case 'production':
-    baseUrl = 'http://www.9eup.com';
+    baseUrl = 'https://www.9eup.com';
     break;
 }
 
