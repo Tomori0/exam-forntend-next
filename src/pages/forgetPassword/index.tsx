@@ -92,9 +92,7 @@ export default function ForgetPassword() {
       <Head><title>更改密码 - 玖义考试</title></Head>
       <Box
         sx={{
-          width: '100%',
-          paddingTop: '1rem',
-          paddingBottom: '1rem',
+          width: '100%'
         }}
       >
         <Container>
