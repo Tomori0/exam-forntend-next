@@ -91,9 +91,7 @@ export default function SignIn() {
       <Head><title>登录 - 玖义考试</title></Head>
       <Box
         sx={{
-          width: '100%',
-          paddingTop: '1rem',
-          paddingBottom: '1rem',
+          width: '100%'
         }}
       >
         <Container>
