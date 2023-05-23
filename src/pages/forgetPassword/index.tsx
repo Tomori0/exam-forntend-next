@@ -123,7 +123,7 @@ export default function ForgetPassword() {
                       className='bg-gradient-to-r w-full text-white from-[#c9aa62] to-[#c7c7c7] hover:from-[#c9aa62dd] hover:to-[#c7c7c7dd]'
                       onClick={handleSubmit(onSubmit)}
                     >
-                      忘记密码
+                      <span className={'text-white'}>忘记密码</span>
                     </Button>
                   </form>
                   <div className='flex justify-end mt-[24px] text-[#949494]'>
