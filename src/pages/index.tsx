@@ -81,8 +81,7 @@ export default function SignIn() {
         setErrorMessage(response.statusText)
         setIsError(true)
       }
-    }).catch(error => {
-      console.log(error)
+    }).catch(() => {
     })
   };
 

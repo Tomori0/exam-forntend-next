@@ -37,7 +37,6 @@ serviceAxios.interceptors.request.use(
         config.headers["Content-Type"] = "application/json;charset=utf-8"; // 默认类型
       }
     }
-    console.log("请求配置", config);
     return config;
   },
   (error) => {

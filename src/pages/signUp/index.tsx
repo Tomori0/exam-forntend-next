@@ -122,8 +122,7 @@ export default function SignUp() {
         setIsSuccess(true)
         setSuccessToken(response.data)
       }
-    }).catch(error => {
-      console.log(error)
+    }).catch(() => {
     })
   };
 
@@ -145,8 +144,7 @@ export default function SignUp() {
         sessionStorage.setItem('tokenHead', response.data.tokenHead)
         router.push('/dashboard')
       }
-    }).catch(error => {
-      console.log(error)
+    }).catch(() => {
     })
   };
 
@@ -169,8 +167,7 @@ export default function SignUp() {
         resendTimeRef.current = date
         setResendTime(date)
       }
-    }).catch(error => {
-      console.log(error)
+    }).catch(() => {
     })
   }
 

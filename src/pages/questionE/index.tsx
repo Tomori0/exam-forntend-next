@@ -216,7 +216,6 @@ export default function Question() {
     const infoId = router.query.infoId as string ?? ''
     const date = new Date()
     const message = infoId + date.getTime() + examInfo?.token + '[' + submitAnswer.join(',') + ']'
-    console.log(message)
     const verify = encode(examInfo?.token ? examInfo.token : '', message)
     const response = await useServiceAxios<string[], any>({
       url: '/api/exam/question/submit',

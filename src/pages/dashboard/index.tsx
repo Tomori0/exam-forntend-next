@@ -12,8 +12,7 @@ export default function Dashboard() {
       method: 'get'
     }).then((response: AxiosResponse<UserInfo>) => {
       sessionStorage.setItem('user', JSON.stringify(response.data))
-    }).catch(error => {
-      console.log(error)
+    }).catch(() => {
     })
   }, [])
 

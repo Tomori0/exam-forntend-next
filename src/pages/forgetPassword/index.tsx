@@ -82,8 +82,7 @@ export default function ForgetPassword() {
         setIsSuccess(true)
         setSuccessToken(response.data)
       }
-    }).catch(error => {
-      console.log(error)
+    }).catch(() => {
     })
   };
 
@@ -214,8 +213,7 @@ function ResetPassword({email, successToken}: { email: string, successToken: str
         sessionStorage.setItem('tokenHead', response.data.tokenHead)
         router.push('/dashboard')
       }
-    }).catch(error => {
-      console.log(error)
+    }).catch(() => {
     })
   };
 
@@ -238,8 +236,7 @@ function ResetPassword({email, successToken}: { email: string, successToken: str
         resendTimeRef.current = date
         setResendTime(date)
       }
-    }).catch(error => {
-      console.log(error)
+    }).catch(() => {
     })
   }
 
