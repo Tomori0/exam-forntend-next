@@ -37,7 +37,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel='icon' href='/images/favicon.ico' />
       </Head>
       <Header></Header>
-      <div className='h-[calc(100vh-64px)] bg-gradient-to-r to-[#c9aa62bb] from-[#c7c7c7bb]'>
+      <div className='min-h-[calc(100vh-64px)] bg-gradient-to-r to-[#c9aa62bb] from-[#c7c7c7bb]'>
         <Component {...pageProps} />
       </div>
       <Footer/>
