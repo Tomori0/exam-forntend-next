@@ -173,7 +173,7 @@ export default function SignUp() {
 
   return (
     <div>
-      <Head><title>注册 - 玖义考试</title></Head>
+      <Head><title>注册 - 玖义聊</title></Head>
       <Box
         sx={{
           width: '100%',
