@@ -4,5 +4,7 @@ export interface UserInfo {
   createTime: Date,
   birthday: Date,
   avatar?: string,
+  level: number,
+  expireDate: Date,
   lastLoginTime?: string,
 }
